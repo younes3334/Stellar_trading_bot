@@ -8,4 +8,4 @@ This is a repo for a **Stellar trading bot** that take actions based on a specif
 
 **PS** : It still under contstruction.
 
-Feel free to use it as you pleasur ! :) 
+Feel free to use it as you pleasure ! :) 
