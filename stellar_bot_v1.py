@@ -21,9 +21,9 @@ base_fee = 100
 
 ## Create seller account
 print("Create Seller Account:")
-seller_keys = Keypair.random()
-seller_secret_key = seller_keys.secret
-seller_public_key = seller_keys.public_key
+#seller_keys = "SAHSDPH6RD2IBUX3TVAJ4E6VIM6EVUXDYH72ZL4VRLAXTEBF7ZPRE4SU"
+seller_secret_key = "SAHSDPH6RD2IBUX3TVAJ4E6VIM6EVUXDYH72ZL4VRLAXTEBF7ZPRE4SU"
+seller_public_key = "GADJC34B5SLXJHPAL3BMZAILZOHZNS6OENDOO5EII2D5YOS4RC4CJG25"
 print(f"Seller Account Secret Key: {seller_secret_key}")
 print(f"Seller Account Public Key: {seller_public_key}")
 
@@ -70,11 +70,11 @@ print("Sell offer created\n")
 ## get offer
 print("Get Offer:")
 list_amount = []
-offers = server.offers().for_seller(seller_public_key).call()
+offers = server.offers().for_selling(lumen).call()
 for offer in offers["_embedded"]["records"]:
     print(
         f"ID: {offer['id']}\nSeller: {offer['seller']} \
-          \nSelling: {offer['selling']['asset_code']} \
+          \nSelling: {offer['buying']['asset_code']} \
           \nAmount: {offer['amount']}\nPrice: {offer['price']}"
     )
     list_amount.append((offer['amount'],offer['price']))
@@ -83,24 +83,3 @@ for offer in offers["_embedded"]["records"]:
 print("#" * 30)
 print(list_amount)
 
-
-
-transaction = (
-        TransactionBuilder(
-            source_account=seller_account,
-            network_passphrase=Network.TESTNET_NETWORK_PASSPHRASE,
-            base_fee=100,  # too lazy to fetch :)
-        )
-        .append_manage_sell_offer_op(awesome_asset_coin, seller_public_key.public_key, 'XLM', None, 'USD', '.11')
-        .append_manage_sell_offer_op(awesome_asset_coin, seller_public_key.public_key, 'XLM', None, 'USD', '.12')
-        .append_manage_sell_offer_op(awesome_asset_coin, seller_public_key.public_key, 'XLM', None, 'USD', '.13')
-
-        .build()
-    )
-
-# Sign transaction with distributor private key.
-transaction.sign(seller_secret_key)
-
-# Submit signed transaction to Horizon.
-response = server.submit_transaction(transaction)
-print(json.dumps(response, indent=2))
